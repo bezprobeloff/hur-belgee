@@ -454,4 +454,10 @@
     <string name="audio_latency_multiplier">Audio késleltetési szorzó</string>
     <string name="audio_latency_multiplier_description">Audió pufferméret beállítása (Alacsonyabb = kisebb késleltetés, Magasabb = kevesebb akadozás)</string>
     <string name="audio_queue_capacity">Audió sor kapacitása (Backpressure)</string>
+    <string name="exit_dialog_calibration">Képernyő kalibrálása</string>
+    <string name="calibration_instruction">Húzza a sarkokat a videóterület tökéletes igazításához.</string>
+    <string name="calibration_restart_confirm">A kézfogás (handshake) újraindítása szükséges a vizuális margók alkalmazásához a telefonon. Mentés és újraindítás most?</string>
+    <string name="viewport">Nézetablak</string>
+    <string name="handshake_margins">Margók</string>
+    <string name="apply_and_restart">Alkalmaz és újraindítás</string>
 </resources>

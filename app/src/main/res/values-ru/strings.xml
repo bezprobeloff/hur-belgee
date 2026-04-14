@@ -456,4 +456,10 @@
     <string name="audio_latency_multiplier">Множитель задержки звука</string>
     <string name="audio_latency_multiplier_description">Настройка размера аудио-буфера (Меньше = меньше задержка, Больше = меньше заиканий)</string>
     <string name="audio_queue_capacity">Емкость аудио-очереди (Backpressure)</string>
+    <string name="exit_dialog_calibration">Калибровка экрана</string>
+    <string name="calibration_instruction">Перетащите углы, чтобы идеально выровнять область видео.</string>
+    <string name="calibration_restart_confirm">Требуется перезапуск рукопожатия, чтобы применить визуальные поля к телефону. Сохранить и перезапустить сейчас?</string>
+    <string name="viewport">Область просмотра</string>
+    <string name="handshake_margins">Поля</string>
+    <string name="apply_and_restart">Применить и перезапустить</string>
 </resources>

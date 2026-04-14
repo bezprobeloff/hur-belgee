@@ -455,4 +455,10 @@
     <string name="audio_latency_multiplier">音訊延遲倍增器</string>
     <string name="audio_latency_multiplier_description">調整音訊緩衝區大小 (低 = 低延遲, 高 = 低斷斷續續)</string>
     <string name="audio_queue_capacity">音訊佇列容量 (Backpressure)</string>
+    <string name="exit_dialog_calibration">螢幕校準</string>
+    <string name="calibration_instruction">拖動角落以完美對齊影片區域。</string>
+    <string name="calibration_restart_confirm">需要重新啟動握手協議才能將視覺邊距應用於手機。立即儲存並重新啟動？</string>
+    <string name="viewport">視口</string>
+    <string name="handshake_margins">邊距</string>
+    <string name="apply_and_restart">應用並重新啟動</string>
 </resources>

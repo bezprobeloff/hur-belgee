@@ -455,4 +455,10 @@
     <string name="audio_latency_multiplier">Audiovertraging vermenigvuldiger</string>
     <string name="audio_latency_multiplier_description">Audio-buffergrootte aanpassen (Lager = minder vertraging, Hoger = minder stotteren)</string>
     <string name="audio_queue_capacity">Audio-wachtrijcapaciteit (Backpressure)</string>
+    <string name="exit_dialog_calibration">Schermkalibratie</string>
+    <string name="calibration_instruction">Sleep de hoeken om het videogebied perfect uit te lijnen.</string>
+    <string name="calibration_restart_confirm">Handshake herstart vereist om visuele marges op de telefoon toe te passen. Nu opslaan en herstarten?</string>
+    <string name="viewport">Sichtvenster</string>
+    <string name="handshake_margins">Marges</string>
+    <string name="apply_and_restart">Toepassen &amp; herstarten</string>
 </resources>

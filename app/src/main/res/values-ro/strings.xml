@@ -456,4 +456,10 @@
     <string name="audio_latency_multiplier">Multiplicator latență audio</string>
     <string name="audio_latency_multiplier_description">Ajustare dimensiune buffer audio (Mai mic = latență mai mică, Mai mare = mai puține întreruperi)</string>
     <string name="audio_queue_capacity">Capacitate coadă audio (Backpressure)</string>
+    <string name="exit_dialog_calibration">Calibrare ecran</string>
+    <string name="calibration_instruction">Trageți colțurile pentru a alinia perfect zona video.</string>
+    <string name="calibration_restart_confirm">Este necesară repornirea handshake pentru a aplica marginile vizuale pe telefon. Salvați și reporniți acum?</string>
+    <string name="viewport">Viewport</string>
+    <string name="handshake_margins">Margini</string>
+    <string name="apply_and_restart">Aplicați și reporniți</string>
 </resources>

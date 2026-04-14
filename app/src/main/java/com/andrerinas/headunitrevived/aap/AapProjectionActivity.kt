@@ -8,15 +8,16 @@ import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.FrameLayout
+import android.widget.TextView
+import android.widget.Toast
 import android.view.Gravity
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.TextureView
 import android.view.View
-import android.widget.Button
-import android.widget.FrameLayout
-import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.core.content.ContextCompat
@@ -46,6 +47,7 @@ import com.andrerinas.headunitrevived.utils.SystemUI
 import android.content.IntentFilter
 import com.andrerinas.headunitrevived.view.ProjectionViewScaler
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.andrerinas.headunitrevived.view.CalibrationOverlay
 
 class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks, VideoDimensionsListener {
 
@@ -62,6 +64,14 @@ class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks, Vide
     private var initialY = 0f
     private var isPotentialGesture = false
     private var fpsTextView: TextView? = null
+    
+    private var calibrationOverlay: CalibrationOverlay? = null
+    private var calibrationControls: View? = null
+    private var preCalibrationInsets = IntArray(4) // L, T, R, B
+    private var currentCalibL = 0
+    private var currentCalibT = 0
+    private var currentCalibR = 0
+    private var currentCalibB = 0
 
     private val videoWatchdogRunnable = object : Runnable {
         override fun run() {
@@ -313,7 +323,7 @@ class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks, Vide
 
         projectionView.addCallback(this)
 
-        val overlayView = OverlayTouchView(this)
+        val overlayView = OverlayTouchView(this).apply { id = R.id.overlay_touch_view }
         overlayView.layoutParams = FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.MATCH_PARENT,
             FrameLayout.LayoutParams.MATCH_PARENT
@@ -340,6 +350,8 @@ class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks, Vide
         findViewById<Button>(R.id.disconnect_button)?.setOnClickListener {
             commManager.disconnect()
         }
+
+        initCalibrationOverlay(container)
 
         videoDecoder.onFirstFrameListener = {
             runOnUiThread {
@@ -466,6 +478,7 @@ class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks, Vide
         }
         
         options.add(ExitOption(R.string.exit_dialog_background, R.drawable.ic_home, Color.LTGRAY))
+        options.add(ExitOption(R.string.exit_dialog_calibration, R.drawable.ic_drag_handle, Color.LTGRAY))
 
         val adapter = object : android.widget.BaseAdapter() {
             override fun getCount(): Int = options.size
@@ -500,7 +513,167 @@ class AapProjectionActivity : SurfaceActivity(), IProjectionView.Callbacks, Vide
                     R.string.exit_dialog_background -> {
                         moveToBackground()
                     }
+                    R.string.exit_dialog_calibration -> {
+                        enterCalibrationMode()
+                    }
                 }
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
+    private fun initCalibrationOverlay(container: FrameLayout) {
+        calibrationOverlay = CalibrationOverlay(this).apply {
+            layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
+            visibility = View.GONE
+            setCallbacks(
+                onChanged = { l, t, r, b ->
+                    val view = projectionView as View
+                    val totalW = container.width.toFloat()
+                    val totalH = container.height.toFloat()
+                    
+                    if (totalW > 0 && totalH > 0) {
+                        // Calculate transformation relative to FULL screen
+                        val sX = (totalW - l - r) / totalW
+                        val sY = (totalH - t - b) / totalH
+                        
+                        view.scaleX = sX.coerceAtLeast(0.1f)
+                        view.scaleY = sY.coerceAtLeast(0.1f)
+                        view.translationX = (l - r) / 2f
+                        view.translationY = (t - b) / 2f
+
+                        currentCalibL = l
+                        currentCalibT = t
+                        currentCalibR = r
+                        currentCalibB = b
+                    }
+                },
+                onSave = { saveAndRestart() },
+                onCancel = { exitCalibrationMode() }
+            )
+        }
+        // Add to window root to ensure it covers everything absolutely
+        addContentView(calibrationOverlay, FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT))
+
+        // Add control buttons for calibration
+        val controls = android.widget.LinearLayout(this).apply {
+            orientation = android.widget.LinearLayout.HORIZONTAL
+            gravity = android.view.Gravity.CENTER
+            setBackgroundColor(Color.parseColor("#CC000000"))
+            setPadding(20, 20, 20, 20)
+            visibility = View.GONE
+            layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                gravity = android.view.Gravity.BOTTOM or android.view.Gravity.CENTER_HORIZONTAL
+                bottomMargin = 100
+            }
+            
+            addView(android.widget.Button(this@AapProjectionActivity).apply {
+                text = getString(R.string.reset)
+                setTextColor(Color.WHITE)
+                setOnClickListener { calibrationOverlay?.reset() }
+            })
+            
+            addView(android.widget.Button(this@AapProjectionActivity).apply {
+                text = getString(R.string.cancel)
+                setTextColor(Color.WHITE)
+                setOnClickListener { exitCalibrationMode() }
+            })
+            
+            addView(android.widget.Button(this@AapProjectionActivity).apply {
+                text = getString(R.string.apply_and_restart)
+                setTextColor(Color.WHITE)
+                setOnClickListener { saveAndRestart() }
+            })
+        }
+        calibrationControls = controls
+        addContentView(controls, controls.layoutParams)
+    }
+
+    private fun enterCalibrationMode() {
+        preCalibrationInsets[0] = settings.insetLeft
+        preCalibrationInsets[1] = settings.insetTop
+        preCalibrationInsets[2] = settings.insetRight
+        preCalibrationInsets[3] = settings.insetBottom
+        
+        currentCalibL = settings.insetLeft
+        currentCalibT = settings.insetTop
+        currentCalibR = settings.insetRight
+        currentCalibB = settings.insetBottom
+        
+        calibrationOverlay?.initInsets(currentCalibL, currentCalibT, currentCalibR, currentCalibB)
+        
+        // IMPORTANT: Clear padding so the overlay and view can use the WHOLE screen for calibration reference
+        val container = findViewById<FrameLayout>(R.id.container)
+        container.setPadding(0, 0, 0, 0)
+        
+        // Reset view transforms to full-screen before starting
+        val view = projectionView as View
+        view.scaleX = 1.0f
+        view.scaleY = 1.0f
+        view.translationX = 0f
+        view.translationY = 0f
+        
+        // Trigger intermediate scale to see current saved area on full screen
+        val totalW = container.width.toFloat()
+        val totalH = container.height.toFloat()
+        if (totalW > 0 && totalH > 0) {
+            val sX = (totalW - currentCalibL - currentCalibR) / totalW
+            val sY = (totalH - currentCalibT - currentCalibB) / totalH
+            view.scaleX = sX
+            view.scaleY = sY
+            view.translationX = (currentCalibL - currentCalibR) / 2f
+            view.translationY = (currentCalibT - currentCalibB) / 2f
+        }
+        
+        calibrationOverlay?.visibility = View.VISIBLE
+        calibrationControls?.visibility = View.VISIBLE
+        calibrationControls?.bringToFront()
+        
+        // Disable projection touch while calibrating
+        findViewById<OverlayTouchView>(R.id.overlay_touch_view)?.visibility = View.GONE
+    }
+
+    private fun exitCalibrationMode() {
+        // Revert UI transforms
+        val view = projectionView as View
+        view.scaleX = 1.0f
+        view.scaleY = 1.0f
+        view.translationX = 0f
+        view.translationY = 0f
+
+        // Revert to pre-calibration values
+        settings.insetLeft = preCalibrationInsets[0]
+        settings.insetTop = preCalibrationInsets[1]
+        settings.insetRight = preCalibrationInsets[2]
+        settings.insetBottom = preCalibrationInsets[3]
+        
+        calibrationOverlay?.visibility = View.GONE
+        calibrationControls?.visibility = View.GONE
+        // Re-enable projection touch
+        findViewById<OverlayTouchView>(R.id.overlay_touch_view)?.visibility = View.VISIBLE
+        
+        // Final UI refresh to restore normal padding from saved settings
+        SystemUI.apply(window, findViewById(R.id.container), settings.fullscreenMode) {
+            ProjectionViewScaler.updateScale(view, videoDecoder.videoWidth, videoDecoder.videoHeight)
+        }
+    }
+
+    private fun saveAndRestart() {
+        MaterialAlertDialogBuilder(this, R.style.DarkAlertDialog)
+            .setTitle(R.string.exit_dialog_calibration)
+            .setMessage(R.string.calibration_restart_confirm)
+            .setPositiveButton(R.string.apply_and_restart) { _, _ ->
+                // Final save to settings
+                settings.insetLeft = currentCalibL
+                settings.insetTop = currentCalibT
+                settings.insetRight = currentCalibR
+                settings.insetBottom = currentCalibB
+                
+                commManager.disconnect(sendByeBye = true)
+                finish()
             }
             .setNegativeButton(R.string.cancel, null)
             .show()

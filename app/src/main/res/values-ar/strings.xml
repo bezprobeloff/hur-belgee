@@ -455,4 +455,10 @@
     <string name="audio_latency_multiplier">مضاعف زمن انتقال الصوت</string>
     <string name="audio_latency_multiplier_description">ضبط حجم مخزن الصوت (أقل = تأخير أقل، أعلى = تقطع أقل)</string>
     <string name="audio_queue_capacity">سعة قائمة انتظار الصوت (Backpressure)</string>
+    <string name="exit_dialog_calibration">معايرة الشاشة</string>
+    <string name="calibration_instruction">اسحب الزوايا لمحاذاة منطقة الفيديو تمامًا.</string>
+    <string name="calibration_restart_confirm">مطلوب إعادة تشغيل المصافحة لتطبيق الحواف المرئية على الهاتف. حفظ وإعادة التشغيل الآن؟</string>
+    <string name="viewport">منفذ العرض</string>
+    <string name="handshake_margins">الهوامش</string>
+    <string name="apply_and_restart">تطبيق وإعادة التشغيل</string>
 </resources>

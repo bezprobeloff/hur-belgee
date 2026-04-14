@@ -463,4 +463,10 @@
     <string name="audio_latency_multiplier">オーディオ遅延倍率</string>
     <string name="audio_latency_multiplier_description">オーディオバッファサイズの調整（低 = 遅延減、高 = 音飛び減）</string>
     <string name="audio_queue_capacity">オーディオキュー容量 (Backpressure)</string>
+    <string name="exit_dialog_calibration">画面キャリブレーション</string>
+    <string name="calibration_instruction">角をドラッグしてビデオ領域を完全に合わせます。</string>
+    <string name="calibration_restart_confirm">視覚的な余白をスマートフォンに適用するには、ハンドシェイクの再起動が必要です。今すぐ保存して再起動しますか？</string>
+    <string name="viewport">ビューポート</string>
+    <string name="handshake_margins">余白</string>
+    <string name="apply_and_restart">適用して再起動</string>
 </resources>

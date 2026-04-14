@@ -456,4 +456,10 @@
     <string name="audio_latency_multiplier">Multiplicador de latência de áudio</string>
     <string name="audio_latency_multiplier_description">Ajuste o tamanho do buffer de áudio (Menor = menos lag, Maior = menos engasgos)</string>
     <string name="audio_queue_capacity">Capacidade da fila de áudio (Backpressure)</string>
+    <string name="exit_dialog_calibration">Calibração de tela</string>
+    <string name="calibration_instruction">Arraste os cantos para alinhar perfeitamente a área de vídeo.</string>
+    <string name="calibration_restart_confirm">Reinicialização do handshake necessária para aplicar margens visuais ao telefone. Salvar e reiniciar agora?</string>
+    <string name="viewport">Visualização</string>
+    <string name="handshake_margins">Margens</string>
+    <string name="apply_and_restart">Aplicar e reiniciar</string>
 </resources>
