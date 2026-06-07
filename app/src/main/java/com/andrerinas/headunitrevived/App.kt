@@ -31,7 +31,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        
+
         // Enable vector drawable support on older Android versions
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
 
@@ -48,9 +48,9 @@ class App : Application() {
             // can read them during locked boot (before user unlock)
             Settings.syncAutoStartOnBootToDeviceStorage(this, settings.autoStartOnBoot)
             Settings.syncAutoStartOnUsbToDeviceStorage(this, settings.autoStartOnUsb)
-            Settings.syncAutoStartOnWifiToDeviceStorage(this, settings.autoStartOnWifi)
-            Settings.syncAutoStartWifiSsidToDeviceStorage(this, settings.autoStartWifiSsid)
-            Settings.syncAutoStartBtMacsToDeviceStorage(this, settings.autoStartBluetoothDeviceMacs)
+//            Settings.syncAutoStartOnWifiToDeviceStorage(this, settings.autoStartOnWifi)
+//            Settings.syncAutoStartWifiSsidToDeviceStorage(this, settings.autoStartWifiSsid)
+//            Settings.syncAutoStartBtMacsToDeviceStorage(this, settings.autoStartBluetoothDeviceMacs)
 
             // Apply app theme
             if (AppThemeManager.isStaticMode(settings.appTheme)) {

@@ -63,7 +63,7 @@ class Settings(private val context: Context) {
         }
 
     var resolutionId: Int
-        get() = prefs.getInt("resolutionId", 0)
+        get() = prefs.getInt("resolutionId", 3)
         set(value) = prefs.edit().putInt("resolutionId", value).apply()
 
     // Flag to determine if the projection should stretch and ignore aspect ratio to fill the screen
@@ -78,12 +78,12 @@ class Settings(private val context: Context) {
 
     // UI Scale percentage for Home
     var uiScaleHomePercent: Int
-        get() = prefs.getInt("ui-scale-home-percent", 100)
+        get() = prefs.getInt("ui-scale-home-percent", 150)
         set(value) { prefs.edit().putInt("ui-scale-home-percent", value).apply() }
 
     // UI Scale percentage for Settings
     var uiScaleSettingsPercent: Int
-        get() = prefs.getInt("ui-scale-settings-percent", 100)
+        get() = prefs.getInt("ui-scale-settings-percent", 150)
         set(value) { prefs.edit().putInt("ui-scale-settings-percent", value).apply() }
 
     var micSampleRate: Int
@@ -106,7 +106,7 @@ class Settings(private val context: Context) {
 
     /** Mirror phone now-playing (title, artist, duration, art) in the system media session. */
     var syncMediaSessionWithAaMetadata: Boolean
-        get() = prefs.getBoolean(KEY_SYNC_MEDIA_SESSION_AA_METADATA, false)
+        get() = prefs.getBoolean(KEY_SYNC_MEDIA_SESSION_AA_METADATA, true)
         set(value) {
             prefs.edit().putBoolean(KEY_SYNC_MEDIA_SESSION_AA_METADATA, value).apply()
         }
@@ -186,7 +186,7 @@ class Settings(private val context: Context) {
         }
 
     var dpiPixelDensity: Int
-        get() = prefs.getInt("dpi-pixel-density", 0) // Default 0 for Auto
+        get() = prefs.getInt("dpi-pixel-density", 240) // Default 0 for Auto
         set(value) {
             prefs.edit().putInt("dpi-pixel-density", value).apply()
         }
@@ -326,7 +326,7 @@ class Settings(private val context: Context) {
         set(value) { prefs.edit().putInt("wifi-connection-mode", value).apply() }
 
     var videoCodec: String
-        get() = prefs.getString("video-codec", "Auto")!!
+        get() = prefs.getString("video-codec", "H.265")!!
         set(value) { prefs.edit().putString("video-codec", value).apply() }
 
     var fpsLimit: Int
@@ -334,11 +334,11 @@ class Settings(private val context: Context) {
         set(value) { prefs.edit().putInt("fps-limit", value).apply() }
 
     var hasAcceptedDisclaimer: Boolean
-        get() = prefs.getBoolean("has-accepted-disclaimer", false)
+        get() = prefs.getBoolean("has-accepted-disclaimer", true)
         set(value) { prefs.edit().putBoolean("has-accepted-disclaimer", value).apply() }
 
     var hasCompletedSetupWizard: Boolean
-        get() = prefs.getBoolean("has-completed-setup-wizard", false)
+        get() = prefs.getBoolean("has-completed-setup-wizard", true)
         set(value) { prefs.edit().putBoolean("has-completed-setup-wizard", value).apply() }
 
     var autoConnectLastSession: Boolean
@@ -392,7 +392,7 @@ class Settings(private val context: Context) {
     var audioLatencyMultiplier: Int
         get() = prefs.getInt("audio-latency-multiplier", 8)
         set(value) { prefs.edit().putInt("audio-latency-multiplier", value).apply() }
-    
+
     var audioQueueCapacity: Int
         get() = prefs.getInt("audio-queue-capacity", 0)
         set(value) { prefs.edit().putInt("audio-queue-capacity", value).apply() }
@@ -440,7 +440,7 @@ class Settings(private val context: Context) {
     var autoStartWifiSsid: String
         get() = prefs.getString("auto-start-wifi-ssid", "")!!
         set(value) { prefs.edit().putString("auto-start-wifi-ssid", value).apply() }
-        
+
     var listenForUsbDevices: Boolean
         get() = prefs.getBoolean("listen-for-usb-devices", true)
         set(value) { prefs.edit().putBoolean("listen-for-usb-devices", value).apply() }
@@ -502,7 +502,7 @@ class Settings(private val context: Context) {
         }
 
     var appLanguage: String
-        get() = prefs.getString("app-language", "")!!
+        get() = prefs.getString("app-language", "ru")!!
         set(value) { prefs.edit().putString("app-language", value).apply() }
 
     var mediaVolumeOffset: Int
@@ -785,7 +785,7 @@ class Settings(private val context: Context) {
                     .apply()
             }
         }
-        
+
         fun isListenForUsbDevicesEnabled(context: Context): Boolean {
             val prefs = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 val deviceContext = context.createDeviceProtectedStorageContext()
