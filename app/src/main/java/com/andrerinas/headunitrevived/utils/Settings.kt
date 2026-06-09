@@ -975,7 +975,7 @@ class Settings(private val context: Context) {
         set(value) { prefs.edit().putBoolean("enable-rotary", value).apply() }
 
     var killOnDisconnect: Boolean
-        get() = prefs.getBoolean("kill-on-disconnect", false)
+        get() = prefs.getBoolean("kill-on-disconnect", true)
         set(value) { prefs.edit().putBoolean("kill-on-disconnect", value).apply() }
 
     var autoEnableHotspot: Boolean
